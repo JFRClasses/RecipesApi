@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "npm run typeorm -- migration:generate src/config/migrations/CreateMigration -d src/models/index.ts",
-    "migration:run": "npm run build && npx typeorm migration:run -d dist/src/models/index.js"
+    "migration:run": "npm run build && npx typeorm migration:run -d dist/src/models/index.js",
+    "migration:run:prod": "npx typeorm migration:run -d dist/src/models/index.js"
   },
   "author": "",
   "license": "ISC",
