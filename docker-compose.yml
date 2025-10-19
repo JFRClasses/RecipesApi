@@ -1,20 +1,21 @@
 services:
-  # recipe-api:
-  #   container_name: RecipeApi
-  #   build:
-  #     context: .
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - PORT=${PORT}
-  #     - DB_NAME=${DB_NAME}
-  #     - DB_USER=${DB_USER}
-  #     - DB_PASSWORD=${DB_PASSWORD}
-  #     - DB_HOST=${DB_HOST}
-  #     - DB_PORT=${DB_PORT}
-  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
-  #   depends_on:
-  #     - postgres
+  recipe-api:
+    container_name: RecipeApi
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=${PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - UNSPLASH_API_KEY=${UNSPLASH_API_KEY}
+    depends_on:
+      - postgres
 
   postgres:
     image: postgres

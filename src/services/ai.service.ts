@@ -1,11 +1,11 @@
 import { OpenAI } from 'openai';
 import axios from 'axios';
 import { envs } from '../config/env';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class OpenAIService {
-    openai;
-    filePath = 'data.json';
-
+    openai : OpenAI;
     constructor() {
         this.openai = new OpenAI({
             apiKey: envs.openAIApiKey
@@ -18,8 +18,10 @@ export class OpenAIService {
      */
     getJSONFromResponse(contentResponse : string | null) {
         try {
+            console.log(contentResponse);
             if(!contentResponse) throw new Error("No content");
             const json = JSON.parse(contentResponse);
+            console.log(json);
             return json;
         } catch {
             return { error: true };
@@ -39,9 +41,10 @@ export class OpenAIService {
                     name: "App",
                     content: 
                     `
-                    Instrucciones: Eres una inteligencia artificial que genera recetas basado en ingredientes.
+                    Instrucciones: Eres un chef profesional que genera recetas basado en ingredientes.
                     - Siempre vas a contestar con una lista de instrucciones, en JSON.
                     Sin relleno, sin saludos. Todo directo.
+                    - Te pueden escribir mucho texto, pero debes de poder extraer los ingredientes del texto que te pasen.
                     - Si no te pasan una lista de ingredientes, vas a contestar con: {"error": true}.
                     - Tus contestaciones van a ser las siguientes:
                     {
@@ -62,8 +65,9 @@ export class OpenAIService {
                     content: prompt
                 }
             ],
-            max_tokens: 1000, //5000 caracteres
+            max_completion_tokens: 5000, 
         });
+        console.log(response);
         return response;
     }
 
@@ -74,10 +78,7 @@ export class OpenAIService {
     async getRecipeWithIngredients(ingredients:string) {
         const response = await this.generateRecipeWithPrompt(ingredients);
         const recipeObject = this.getJSONFromResponse(response.choices[0].message.content);
-        /*
-        const persona = {nombre: "Pau", edad: 30}
-        Object.keys(persona) -> ["nombre", "edad"]
-        */
+        
         if (Object.keys(recipeObject).includes('error')) {
             return recipeObject;
         }

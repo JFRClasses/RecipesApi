@@ -39,7 +39,6 @@ export class Recipe {
   @Column({ type: 'int', default: 0 })
   stars!: number;
 
-  // FK: cada receta pertenece a un usuario
   @Column()
   userId!: number;
 

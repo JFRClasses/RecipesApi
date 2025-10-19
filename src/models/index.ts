@@ -4,8 +4,6 @@ import { envs } from "../config/env";
 import { User } from "./User";
 import { Recipe } from "./Recipe";
 
-
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: envs.dbHost,
