@@ -3,6 +3,7 @@ import { OpenAIService } from "../../services/ai.service";
 import { Recipe } from "../../models/Recipe";
 import { inject, injectable } from "tsyringe";
 import { RecipeService } from "./service";
+import { RecipeCDTO } from "../../models/dtos/RecipeCDTO";
 
 @injectable()
 export class RecipeController {
@@ -18,7 +19,7 @@ export class RecipeController {
   };
 
   createRecipe = async (req: Request, res: Response) => {
-    let recipe = req.body as Recipe;
+    let recipe = req.body as RecipeCDTO;
     const createdRecipe = await this.recipeService.createRecipe(recipe);
     return res.status(201).json(createdRecipe);
   };
