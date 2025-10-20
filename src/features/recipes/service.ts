@@ -3,6 +3,7 @@ import { AppDataSource } from "../../models";
 import { Recipe } from "../../models/Recipe";
 import { OpenAIService } from "../../services/ai.service";
 import { RecipeDTO } from '../../models/dtos/RecipeDTO';
+import { RecipeCDTO } from "../../models/dtos/RecipeCDTO";
 
 @injectable()
 export class RecipeService {
@@ -16,7 +17,7 @@ export class RecipeService {
     return recipe;
   };
 
-  async createRecipe(recipe: Recipe) {
+  async createRecipe(recipe: RecipeCDTO) {
     const newRecipe = AppDataSource.manager.create(Recipe, recipe);
 
     const saved = await AppDataSource.manager.save(Recipe, newRecipe);
@@ -36,9 +37,7 @@ export class RecipeService {
       instructions: r.instructions,
       imageUrl: r.imageUrl,
       stars: r.stars,
-      userId: r.userId,
-      createdAt: r.createdAt,
-      updatedAt: r.updatedAt,
+      userId: r.userId
     }));
     return mappedRecipes;
   }

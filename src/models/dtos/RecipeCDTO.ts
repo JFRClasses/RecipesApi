@@ -1,5 +1,4 @@
-export interface RecipeDTO {
-  id: number;
+export interface RecipeCDTO {
   title: string;
   category?: string;
   minutes: number;
