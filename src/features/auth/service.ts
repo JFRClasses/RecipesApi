@@ -22,7 +22,7 @@ export class AuthService {
     const user = AppDataSource.manager.create(User, { name, email, password: hashed });
     const saved = await AppDataSource.manager.save(User, user);
 
-    return { message: 'User created successfully', userId: saved.id };
+    return { message: 'User created successfully', isLogged:true, userId: saved.id };
   }
 
   async login(email: string, password: string) {
@@ -40,6 +40,6 @@ export class AuthService {
       throw err;
     }
 
-    return { userId: user.id, isLogged: true };
+    return { message:"User logged", userId: user.id, isLogged: true };
   }
 }
