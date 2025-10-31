@@ -14,7 +14,7 @@ export class AuthController {
       return res.status(201).json(r);
     } catch (e: any) {
       const status = e.status || 500;
-      return res.status(status).json({ error: e.message || 'Internal server error', isLogged:false, userId: 0 });
+      return res.status(status).json({ message: e.message || 'Internal server error', isLogged:false, userId: 0 });
     }
   };
 
