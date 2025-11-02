@@ -24,10 +24,13 @@ app.get("/", (req: Request, res: Response) => {
   return res.json({ test: "test" });
 });
 
+console.log('[Server] Initializing data source...');
 AppDataSource.initialize()
   .then(() => {
-    app.listen(process.env.PORT || 3000, () =>
-      console.log(`Server running on port ${process.env.PORT || 3000}`)
+    console.log('[Server] Data source initialized successfully');
+    const port = process.env.PORT || 3000;
+    app.listen(port, () =>
+      console.log(`[Server] HTTP server listening on port ${port}`)
     );
   })
-  .catch((error) => console.error(error));
+  .catch((error) => console.error('[Server] Failed to initialize data source', error));
