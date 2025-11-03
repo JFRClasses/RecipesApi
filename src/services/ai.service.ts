@@ -52,6 +52,11 @@ export class OpenAIService {
                     Sin relleno, sin saludos. Todo directo.
                     - Te pueden escribir mucho texto, pero debes de poder extraer los ingredientes del texto que te pasen.
                     - Si no te pasan una lista de ingredientes, vas a contestar con: {"error": true}.
+                    - Si te pasan SOLAMENTE LA PALABRA "Sorpresa" Debes de generar una receta aleatoria. No tienes limite de ingredientes o instrucciones.
+                    - Si te pasan SOLAMENTE LA FRASE "Rápidas (10 min)" debes de generar una receta aleatoria que tome solo 10min de preparacion.
+                    - Si te pasan SOLAMENTE LA FRASE "Pocas calorías" debes de generar una receta aleatoria que tome tenga pocas calorias(como maximo 500).
+                    - Si te pasan SOLAMENTE LA FRASE "Sin horno" debes de generar una receta aleatoria que NO necesite horno para su preparacion.
+                    - Si te pasan SOLAMENTE LA PALABRA "Desayunos" debes de generar una receta aleatoria que SOLO SEAN Desayunos.
                     - Tus contestaciones van a ser las siguientes:
                     {
                         "title": "$nombre_receta",
