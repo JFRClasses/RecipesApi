@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { AppDataSource } from "../../models";
 import { Recipe } from "../../models/Recipe";
 import { OpenAIService } from "../../services/ai.service";
-import { RecipeDTO } from '../../models/dtos/RecipeDTO';
+import { RecipeDTO } from "../../models/dtos/RecipeDTO";
 import { RecipeCDTO } from "../../models/dtos/RecipeCDTO";
 
 @injectable()
@@ -13,14 +13,18 @@ export class RecipeService {
 
   generateRecipe = async (ingredients: string) => {
     ingredients = ingredients || "";
-    console.log(`[RecipeService] generateRecipe called. Ingredients length: ${ingredients.length}`);
+    console.log(
+      `[RecipeService] generateRecipe called. Ingredients length: ${ingredients.length}`
+    );
     const recipe = await this.aiService.getRecipeWithIngredients(ingredients);
-    console.log('[RecipeService] generateRecipe completed');
+    console.log("[RecipeService] generateRecipe completed");
     return recipe;
   };
 
   async createRecipe(recipe: RecipeCDTO) {
-    console.log(`[RecipeService] createRecipe called. Title: "${recipe.title}" UserId: ${recipe.userId}`);
+    console.log(
+      `[RecipeService] createRecipe called. Title: "${recipe.title}" UserId: ${recipe.userId}`
+    );
     const newRecipe = AppDataSource.manager.create(Recipe, recipe);
 
     const saved = await AppDataSource.manager.save(Recipe, newRecipe);
@@ -28,11 +32,15 @@ export class RecipeService {
     return saved;
   }
 
-  async getRecipesByUserId(userId : number) : Promise<RecipeDTO[]>{
-    console.log(`[RecipeService] getRecipesByUserId called for userId=${userId}`);
+  async getRecipesByUserId(userId: number): Promise<RecipeDTO[]> {
+    console.log(
+      `[RecipeService] getRecipesByUserId called for userId=${userId}`
+    );
     const recipeRepository = AppDataSource.manager.getRepository(Recipe);
-    const recipes = await recipeRepository.find({where: { userId:userId }});
-    console.log(`[RecipeService] Fetched ${recipes.length} recipes for userId=${userId}`);
+    const recipes = await recipeRepository.find({ where: { userId: userId } });
+    console.log(
+      `[RecipeService] Fetched ${recipes.length} recipes for userId=${userId}`
+    );
     const mappedRecipes: RecipeDTO[] = recipes.map((r) => ({
       id: r.id,
       title: r.title,
@@ -42,9 +50,25 @@ export class RecipeService {
       instructions: r.instructions,
       imageUrl: r.imageUrl,
       stars: r.stars,
-      userId: r.userId
+      userId: r.userId,
     }));
-    console.log(`[RecipeService] Mapped ${mappedRecipes.length} recipes to DTO`);
+    console.log(
+      `[RecipeService] Mapped ${mappedRecipes.length} recipes to DTO`
+    );
     return mappedRecipes;
+  }
+  async deleteRecipe(id: number): Promise<boolean> {
+    console.log(`[RecipeService] deleteRecipe called for id=${id}`);
+
+    const recipeRepository = AppDataSource.manager.getRepository(Recipe);
+    const result = await recipeRepository.delete(id);
+
+    if (result.affected && result.affected > 0) {
+      console.log(`[RecipeService] Recipe deleted id=${id}`);
+      return true;
+    }
+
+    console.warn(`[RecipeService] No recipe found with id=${id}`);
+    return false;
   }
 }
