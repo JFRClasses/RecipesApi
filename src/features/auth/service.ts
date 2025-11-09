@@ -39,7 +39,7 @@ export class AuthService {
 
     const ok = await this.crypt.comparePasswords(password, user.password);
     if (!ok) {
-      const err: any = new Error('Invalid credentials');
+      const err: any = new Error('Credenciales Invalidas');
       err.status = 401;
       console.warn('[AuthService] Login failed: wrong password');
       throw err;
