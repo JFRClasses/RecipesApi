@@ -31,7 +31,7 @@ export class AuthService {
     console.log(`[AuthService] login called. Email=${email}`);
     const user = await AppDataSource.manager.findOne(User, { where: { email } });
     if (!user) {
-      const err: any = new Error('Invalid credentials');
+      const err: any = new Error('Credenciales invalidas');
       err.status = 401;
       console.warn('[AuthService] Login failed: user not found');
       throw err;
