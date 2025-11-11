@@ -9,12 +9,14 @@ import { container } from "tsyringe";
 import { CryptService } from "./src/services/crypt.service";
 import authRoutes from './src/features/auth/routes';
 import recipeRoutes from './src/features/recipes/routes';
+import userRoutes from './src/features/user/routes';
 const app = express();
 container.registerSingleton(CryptService, CryptService);
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
-app.use('/api/recipes',recipeRoutes)
+app.use('/api/recipes',recipeRoutes);
+app.use('/api/user',userRoutes);
 app.get("/users", async (_req, res) => {
   const users = await AppDataSource.getRepository(User).find();
   return res.json(users);

@@ -26,11 +26,48 @@ export class AuthService {
 
   async register(name: string, email: string, password: string) {
     console.log(`[AuthService] register called. Email=${email}`);
+
+    if (!name || !email || !password) {
+      const err: any = new Error(
+        "El nombre, correo y contraseña son obligatorios."
+      );
+      err.status = 400;
+      throw err;
+    }
+
+    name = name.trim();
+    email = email.trim();
+
+    if (name.length === 0 || email.length === 0 || password.length === 0) {
+      const err: any = new Error(
+        "El nombre, correo y contraseña no pueden estar vacíos."
+      );
+      err.status = 400;
+      throw err;
+    }
+
+    if (/\s/.test(email) || /\s/.test(name)) {
+      const err: any = new Error(
+        "El nombre y el correo no deben contener espacios en blanco."
+      );
+      err.status = 400;
+      throw err;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      const err: any = new Error(
+        "El formato del correo electrónico no es válido."
+      );
+      err.status = 400;
+      throw err;
+    }
+
     const existing = await AppDataSource.manager.findOne(User, {
       where: { email },
     });
     if (existing) {
-      const err: any = new Error("Email already in use");
+      const err: any = new Error("El correo electrónico ya está en uso.");
       err.status = 409;
       console.warn("[AuthService] Registration attempt with existing email");
       throw err;
@@ -43,9 +80,10 @@ export class AuthService {
       password: hashed,
     });
     const saved = await AppDataSource.manager.save(User, user);
+
     console.log(`[AuthService] User created with id=${saved.id}`);
     return {
-      message: "User created successfully",
+      message: "Usuario registrado correctamente.",
       isLogged: true,
       userId: saved.id,
     };
