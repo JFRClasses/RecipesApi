@@ -1,9 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { CryptService } from "../../services/crypt.service";
 import { User } from "../../models/User";
-import { DataSource } from "typeorm";
 import { AppDataSource } from "../../models/index";
-import { NextFunction, Request, Response } from "express";
 
 @injectable()
 export class AuthService {
