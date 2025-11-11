@@ -28,7 +28,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_recipe:/var/lib/postgresql
 
 volumes:
-  postgres_data:
+  postgres_data_recipe:

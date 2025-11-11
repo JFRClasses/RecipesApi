@@ -8,7 +8,13 @@ export class UserService {
   async getUserById(id: number) {
     console.log(`[AuthService] getUserById called. id=${id}`);
 
-    const user = await AppDataSource.manager.findOne(User, { where: { id } });
+    const userRepository = AppDataSource.manager.getRepository(User);
+
+    const user = await userRepository
+      .createQueryBuilder("user")
+      .loadRelationCountAndMap("user.recipeCount", "user.recipes")
+      .where("user.id = :id", { id })
+      .getOne();
 
     if (!user) {
       const err: any = new Error("Usuario no encontrado");
@@ -19,6 +25,7 @@ export class UserService {
     const { password, ...safeData } = user;
     return safeData;
   }
+
   deleteUser = async (id: number): Promise<boolean> => {
     console.log(`[UserService] deleteUser called for id=${id}`);
 
