@@ -7,21 +7,6 @@ import { AppDataSource } from "../../models/index";
 export class AuthService {
   constructor(@inject(CryptService) private readonly crypt: CryptService) {}
 
-  async getUserById(id: number) {
-    console.log(`[AuthService] getUserById called. id=${id}`);
-
-    const user = await AppDataSource.manager.findOne(User, { where: { id } });
-
-    if (!user) {
-      const err: any = new Error("Usuario no encontrado");
-      err.status = 404;
-      throw err;
-    }
-
-    const { password, ...safeData } = user;
-    return safeData;
-  }
-
   async register(name: string, email: string, password: string) {
     console.log(`[AuthService] register called. Email=${email}`);
 

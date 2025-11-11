@@ -6,31 +6,6 @@ import { NextFunction, Response, Request } from "express";
 export class AuthController {
   constructor(@inject(AuthService) private readonly auth: AuthService) {}
 
-  getUser = async (req: Request, res: Response, _next: NextFunction) => {
-    try {
-      const id = Number(req.params.id);
-
-      if (!id || isNaN(id)) {
-        return res.status(400).json({ message: "Parámetro 'id' inválido" });
-      }
-
-      console.log(`[AuthController] GET /api/auth/user/${id} called`);
-      const user = await this.auth.getUserById(id);
-
-      console.log(`[AuthController] Returning user info for id=${id}`);
-      return res.status(200).json({
-        message: "User data loaded successfully",
-        user,
-      });
-    } catch (e: any) {
-      const status = e.status || 500;
-      console.error("[AuthController] Failed to load user", e);
-      return res.status(status).json({
-        message: e.message || "Internal server error",
-      });
-    }
-  };
-
   register = async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const { name, email, password } = req.body;
