@@ -4,28 +4,33 @@ on:
   push:
     branches:
       - main
-
+env:
+  REPOSITORY_IMAGE: ${{ secrets.REPOSITORY_IMAGE }}
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Build Docker Image
-        run: docker build -t ghcr.io/juanfr97/recipes-api:${{ github.sha }} .
+      - name: Login to GHCR
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
 
-      - name: Tag Latest
-        run: docker tag ghcr.io/juanfr97/recipes-api:${{ github.sha }} ghcr.io/juanfr97/recipes-api:latest
-        
-      - name: Log into GitHub Container Registry
-        run: docker login ghcr.io -u ${{ github.repository_owner }} --password ${{ secrets.CR_PAT }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-      - name: Push Docker Images to GitHub Container Registry
-        run: |
-          docker push ghcr.io/juanfr97/recipes-api:${{ github.sha }}
-          docker push ghcr.io/juanfr97/recipes-api:latest
-  
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & Push Staging Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ env.REPOSITORY_IMAGE }}:latest
+            ${{ env.REPOSITORY_IMAGE }}:${{ github.sha }}
   deploy:
     needs: build-and-push
     environment: staging
@@ -38,5 +43,6 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            sudo docker pull ghcr.io/juanfr97/recipes-api:latest
+            cd /containers/bitebits
+            sudo docker pull ${{ env.REPOSITORY_IMAGE }}:latest
             sudo docker compose up -d
