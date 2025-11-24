@@ -29,9 +29,9 @@ export class AuthService {
       throw err;
     }
 
-    if (/\s/.test(email) || /\s/.test(name)) {
+    if (/\s/.test(email)) {
       const err: any = new Error(
-        "El nombre y el correo no deben contener espacios en blanco."
+        "El correo no deben contener espacios en blanco."
       );
       err.status = 400;
       throw err;
