@@ -8,5 +8,6 @@ export const envs = {
    dbHost: process.env.DB_HOST || "localhost",
    dbPort: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
    openAIApiKey: process.env.OPENAI_API_KEY || "",
-   upslapshApiKey: process.env.UNSPLASH_API_KEY || ""
+   upslapshApiKey: process.env.UNSPLASH_API_KEY || "",
+   appInsightsConnectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || ""
 }

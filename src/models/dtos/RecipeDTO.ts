@@ -8,4 +8,5 @@ export interface RecipeDTO {
   imageUrl?: string;
   stars: number;
   userId: number;
+  isFavorite: boolean;
 }

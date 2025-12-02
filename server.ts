@@ -1,3 +1,6 @@
+import { logger, patchConsoleToWinston } from "./src/config/logger";
+patchConsoleToWinston();
+
 import "reflect-metadata";
 import express, { Request, Response } from "express";
 import { envs } from "./src/config/env";
@@ -26,13 +29,13 @@ app.get("/", (req: Request, res: Response) => {
   return res.json({ test: "test" });
 });
 
-console.log('[Server] Initializing data source...');
+logger.info('[Server] Initializing data source...');
 AppDataSource.initialize()
   .then(() => {
-    console.log('[Server] Data source initialized successfully');
+    logger.info('[Server] Data source initialized successfully');
     const port = process.env.PORT || 3000;
     app.listen(port, () =>
-      console.log(`[Server] HTTP server listening on port ${port}`)
+      logger.info(`[Server] HTTP server listening on port ${port}`)
     );
   })
-  .catch((error) => console.error('[Server] Failed to initialize data source', error));
+  .catch((error) => logger.error('[Server] Failed to initialize data source', error));

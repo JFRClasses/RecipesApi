@@ -51,6 +51,7 @@ export class RecipeService {
       imageUrl: r.imageUrl,
       stars: r.stars,
       userId: r.userId,
+      isFavorite: r.isFavorite,
     }));
     console.log(
       `[RecipeService] Mapped ${mappedRecipes.length} recipes to DTO`
@@ -70,5 +71,65 @@ export class RecipeService {
 
     console.warn(`[RecipeService] No recipe found with id=${id}`);
     return false;
+  }
+  async toggleFavorite(id: number): Promise<RecipeDTO | null> {
+    console.log(`[RecipeService] toggleFavorite called for id=${id}`);
+
+    const recipeRepository = AppDataSource.manager.getRepository(Recipe);
+    const recipe = await recipeRepository.findOne({ where: { id } });
+
+    if (!recipe) {
+      console.warn(`[RecipeService] Recipe not found for toggle. id=${id}`);
+      return null;
+    }
+
+    recipe.isFavorite = !recipe.isFavorite;
+
+    const updated = await recipeRepository.save(recipe);
+
+    console.log(
+      `[RecipeService] Favorite toggled. id=${id}, isFavorite=${updated.isFavorite}`
+    );
+
+    return {
+      id: updated.id,
+      title: updated.title,
+      category: updated.category,
+      minutes: updated.minutes,
+      ingredients: updated.ingredients,
+      instructions: updated.instructions,
+      imageUrl: updated.imageUrl,
+      stars: updated.stars,
+      userId: updated.userId,
+      isFavorite: updated.isFavorite,
+    };
+  }
+  async getLatestRecipes(userId: number): Promise<RecipeDTO[]> {
+    console.log(`[RecipeService] getLatestRecipes called for userId=${userId}`);
+
+    const recipeRepository = AppDataSource.manager.getRepository(Recipe);
+
+    const recipes = await recipeRepository.find({
+      where: { userId },
+      order: { id: "DESC" },
+      take: 5,
+    });
+
+    console.log(
+      `[RecipeService] Found ${recipes.length} latest recipes for userId=${userId}`
+    );
+
+    return recipes.map((r) => ({
+      id: r.id,
+      title: r.title,
+      category: r.category,
+      minutes: r.minutes,
+      ingredients: r.ingredients,
+      instructions: r.instructions,
+      imageUrl: r.imageUrl,
+      stars: r.stars,
+      userId: r.userId,
+      isFavorite: r.isFavorite,
+    }));
   }
 }

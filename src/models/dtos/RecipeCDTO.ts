@@ -7,4 +7,5 @@ export interface RecipeCDTO {
   imageUrl?: string;
   stars: number;
   userId: number;
+  isFavorite: boolean;
 }

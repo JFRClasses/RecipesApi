@@ -51,4 +51,7 @@ export class Recipe {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @Column({ nullable:true,default:false })
+  isFavorite!: boolean;
 }

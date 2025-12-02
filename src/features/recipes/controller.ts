@@ -83,4 +83,53 @@ export class RecipeController {
       return res.status(500).json({ message: "Error al eliminar receta" });
     }
   };
+
+  toggleFavorite = async (req: Request, res: Response) => {
+    console.log("[RecipeController] PATCH /api/recipes/:id/toggle-favorite");
+
+    const id = Number(req.params.id);
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ error: "Parámetro 'id' inválido" });
+    }
+
+    try {
+      const result = await this.recipeService.toggleFavorite(id);
+
+      if (!result) {
+        return res.status(404).json({ error: "Receta no encontrada" });
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.error("[RecipeController] toggleFavorite error", err);
+      return res.status(500).json({ error: "Error al actualizar favorito" });
+    }
+  };
+  getLatestRecipes = async (req: Request, res: Response) => {
+    console.log("[RecipeController] GET /api/recipes/latest called");
+
+    const userIdString = req.query.userId;
+
+    if (
+      !userIdString ||
+      Array.isArray(userIdString) ||
+      isNaN(Number(userIdString))
+    ) {
+      return res.status(400).json({
+        error: "Parámetro 'userId' inválido o faltante",
+      });
+    }
+
+    const userId = Number(userIdString);
+
+    try {
+      const recipes = await this.recipeService.getLatestRecipes(userId);
+      return res.json(recipes);
+    } catch (err) {
+      console.error("[RecipeController] Error getting latest recipes", err);
+      return res.status(500).json({
+        error: "Error al obtener las últimas recetas",
+      });
+    }
+  };
 }
